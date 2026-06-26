@@ -2,8 +2,12 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
 import 'dotenv/config';
+import helmet from 'helmet';
 
 const app = express();
+
+// Middleware для захисту від базових хакерських атак
+app.use(helmet());
 
 // Використовуємо значення з .env або дефолтний порт 3000
 const PORT = process.env.PORT ?? 3000;
