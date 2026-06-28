@@ -9,6 +9,7 @@ const noteSchema = new Schema(
     },
     content: {
       type: String,
+      default: '',
       trim: true, // прибирає пробіли на початку та в кінці
     },
     tag: {
