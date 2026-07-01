@@ -3,8 +3,20 @@ import createHttpError from 'http-errors';
 
 // Кореневий маршрут (контролер) до всіх нотаток
 export const getAllNotes = async (req, res) => {
-  const notes = await Note.find();
-  res.status(200).json(notes);
+  // Отримання параметрів пагінації та задавання дефолтних значень
+  const { page = 1, perPage = 10 } = req.query;
+  const skip = (page - 1) * perPage;
+  // Базовий запит
+  const notesQuery = Note.find();
+
+  const [totalItems, notes] = await Promise.all([
+    notesQuery.clone().countDocuments(),
+    notesQuery.skip(skip).limit(perPage),
+  ]);
+
+  // Обчислення загальної кількості сторінок
+  const totalPages = Math.ceil(totalItems / perPage);
+  res.status(200).json(page, perPage, totalItems, totalPages, notes);
 };
 
 // Кореневий маршрут (контролер) до конкретної нотатки за id

@@ -7,6 +7,7 @@ import { logger } from './middleware/logger.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import notesRoutes from './routes/notesRoutes.js';
+import { errors } from 'celebrate';
 
 const app = express();
 
@@ -31,6 +32,9 @@ app.get('/test-error', (req, res) => {
 
 // Middleware 404 (після всіх маршрутів)
 app.use(notFoundHandler);
+
+// Middleware від celebrate (валідація)
+app.use(errors());
 
 // Middleware для обробки помилок (останнє)
 app.use(errorHandler);
