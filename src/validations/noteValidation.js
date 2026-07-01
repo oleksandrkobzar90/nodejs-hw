@@ -1,5 +1,6 @@
 import { Joi, Segments } from 'celebrate';
 import { isValidObjectId } from 'mongoose';
+import { TAGS } from '../constants/tags.js';
 
 // Схема для POST
 export const createNoteSchema = {
@@ -16,18 +17,7 @@ export const createNoteSchema = {
       'string.max': 'Content must be at most {#limit}',
     }),
     tag: Joi.string()
-      .valid(
-        'Work',
-        'Personal',
-        'Meeting',
-        'Shopping',
-        'Ideas',
-        'Travel',
-        'Finance',
-        'Health',
-        'Important',
-        'Todo',
-      )
+      .valid(...TAGS)
       .default('Todo')
       .messages({
         'any.only':
@@ -43,7 +33,7 @@ const objectIdValidator = (value, helpers) => {
 
 // Схема для GET by Id та DELETE by Id
 // Схема для перевірки параметра noteId
-export const noteIdParamSchema = {
+export const noteIdSchema = {
   [Segments.PARAMS]: Joi.object({
     noteId: Joi.string().custom(objectIdValidator).required(),
   }),
@@ -51,21 +41,38 @@ export const noteIdParamSchema = {
 
 // Схема для PATCH
 export const updateNoteSchema = {
-  [Segments.PARAMS]: Joi.object({
-    notesId: Joi.string().custom(objectIdValidator).required(),
-  }),
+  ...noteIdSchema,
   [Segments.BODY]: Joi.object({
-    name: Joi.string().min(3).max(30),
-    age: Joi.number().integer().min(12).max(65),
-    gender: Joi.string().valid('male', 'female', 'other'),
-    avgMark: Joi.number().min(2).max(12),
-    onDuty: Joi.boolean(),
-  }).min(1), // важливо: не дозволяємо порожнє тіло
+    title: Joi.string().min(3).max(30).messages({
+      'string.base': 'Title must be a string',
+      'string.min': 'Title should have at least {#limit} characters',
+      'string.max': 'Title should have at most {#limit} characters',
+    }),
+    content: Joi.string().max(50).default('').messages({
+      'string.base': 'Content must be a string',
+      'string.min': 'Content must be at least {#limit}',
+      'string.max': 'Content must be at most {#limit}',
+    }),
+    tag: Joi.string()
+      .valid(...TAGS)
+      .default('Todo')
+      .messages({
+        'any.only':
+          'Tag must be one of: Work, Personal, Meeting, Shopping, Ideas, Travel, Finance, Health, Important, Todo,',
+      }),
+  })
+    .min(1)
+    .messages({
+      'object.min':
+        'At least one field (title, content or tag) must be provided',
+    }),
 };
 
 export const getAllNotesSchema = {
   [Segments.QUERY]: Joi.object({
     page: Joi.number().integer().min(1).default(1),
     perPage: Joi.number().integer().min(5).max(20).default(10),
+    tag: Joi.string().valid(...TAGS),
+    search: Joi.string().trim().allow(''),
   }),
 };
