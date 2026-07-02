@@ -5,10 +5,9 @@ import { TAGS } from '../constants/tags.js';
 // Схема для POST
 export const createNoteSchema = {
   [Segments.BODY]: Joi.object({
-    title: Joi.string().min(1).max(30).required().messages({
+    title: Joi.string().min(1).required().messages({
       'string.base': 'Title must be a string',
       'string.min': 'Title should have at least {#limit} characters',
-      'string.max': 'Title should have at most {#limit} characters',
       'any.required': 'Title is required',
     }),
     content: Joi.string().allow('').optional().messages({
@@ -26,7 +25,7 @@ export const createNoteSchema = {
 // Кастомний валідатор для ObjectId
 const objectIdValidator = (value, helpers) => {
   return !isValidObjectId(value)
-    ? helpers.message('NotedID mast be valid MongoDB Object')
+    ? helpers.message('noteId must be a valid MongoDB ObjectId')
     : value;
 };
 
@@ -42,10 +41,9 @@ export const noteIdSchema = {
 export const updateNoteSchema = {
   ...noteIdSchema,
   [Segments.BODY]: Joi.object({
-    title: Joi.string().min(1).max(30).messages({
+    title: Joi.string().min(1).messages({
       'string.base': 'Title must be a string',
       'string.min': 'Title should have at least {#limit} characters',
-      'string.max': 'Title should have at most {#limit} characters',
     }),
     content: Joi.string().allow('').messages({
       'string.base': 'Content must be a string',
