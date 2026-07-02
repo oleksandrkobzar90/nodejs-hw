@@ -11,17 +11,17 @@ export const createNoteSchema = {
       'string.max': 'Title should have at most {#limit} characters',
       'any.required': 'Title is required',
     }),
-    content: Joi.string().allow('').messages({
+    content: Joi.string().allow('').optional().messages({
       'string.base': 'Content must be a string',
       'string.min': 'Content must be at least {#limit}',
       'string.max': 'Content must be at most {#limit}',
     }),
     tag: Joi.string()
-      .optional()
+      .allow('')
       .valid(...TAGS)
+      .optional()
       .messages({
-        'any.only':
-          'Tag must be one of: Work, Personal, Meeting, Shopping, Ideas, Travel, Finance, Health, Important, Todo,',
+        'any.only': `Tag must be one of: ${TAGS.join(', ')}`,
       }),
   }),
 };
@@ -72,7 +72,9 @@ export const getAllNotesSchema = {
   [Segments.QUERY]: Joi.object({
     page: Joi.number().integer().min(1).default(1),
     perPage: Joi.number().integer().min(5).max(20).default(10),
-    tag: Joi.string().valid(...TAGS),
+    tag: Joi.string()
+      .optional()
+      .valid(...TAGS),
     search: Joi.string().trim().allow(''),
   }),
 };
