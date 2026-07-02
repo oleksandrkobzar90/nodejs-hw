@@ -55,7 +55,6 @@ export const updateNoteSchema = {
     }),
     tag: Joi.string()
       .valid(...TAGS)
-      .default('Todo')
       .messages({
         'any.only':
           'Tag must be one of: Work, Personal, Meeting, Shopping, Ideas, Travel, Finance, Health, Important, Todo,',
