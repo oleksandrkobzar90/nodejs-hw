@@ -13,11 +13,8 @@ export const createNoteSchema = {
     }),
     content: Joi.string().allow('').optional().messages({
       'string.base': 'Content must be a string',
-      'string.min': 'Content must be at least {#limit}',
-      'string.max': 'Content must be at most {#limit}',
     }),
     tag: Joi.string()
-      .allow('')
       .valid(...TAGS)
       .optional()
       .messages({
@@ -28,7 +25,9 @@ export const createNoteSchema = {
 
 // Кастомний валідатор для ObjectId
 const objectIdValidator = (value, helpers) => {
-  return !isValidObjectId(value) ? helpers.message('Invalid id format') : value;
+  return !isValidObjectId(value)
+    ? helpers.message('NotedID mast be valid MongoDB Object')
+    : value;
 };
 
 // Схема для GET by Id та DELETE by Id
@@ -57,8 +56,7 @@ export const updateNoteSchema = {
       .optional()
       .valid(...TAGS)
       .messages({
-        'any.only':
-          'Tag must be one of: Work, Personal, Meeting, Shopping, Ideas, Travel, Finance, Health, Important, Todo,',
+        'any.only': `Tag must be one of: ${TAGS.join(', ')}`,
       }),
   })
     .min(1)
