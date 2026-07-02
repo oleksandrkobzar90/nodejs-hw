@@ -48,7 +48,7 @@ export const updateNoteSchema = {
       'string.min': 'Title should have at least {#limit} characters',
       'string.max': 'Title should have at most {#limit} characters',
     }),
-    content: Joi.string().max(50).default('').messages({
+    content: Joi.string().max(50).messages({
       'string.base': 'Content must be a string',
       'string.min': 'Content must be at least {#limit}',
       'string.max': 'Content must be at most {#limit}',
