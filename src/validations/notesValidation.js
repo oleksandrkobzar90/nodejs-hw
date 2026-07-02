@@ -5,20 +5,19 @@ import { TAGS } from '../constants/tags.js';
 // Схема для POST
 export const createNoteSchema = {
   [Segments.BODY]: Joi.object({
-    title: Joi.string().min(3).max(30).required().messages({
+    title: Joi.string().min(1).max(30).required().messages({
       'string.base': 'Title must be a string',
       'string.min': 'Title should have at least {#limit} characters',
       'string.max': 'Title should have at most {#limit} characters',
       'any.required': 'Title is required',
     }),
-    content: Joi.string().max(50).default('').messages({
+    content: Joi.string().allow('').messages({
       'string.base': 'Content must be a string',
       'string.min': 'Content must be at least {#limit}',
       'string.max': 'Content must be at most {#limit}',
     }),
     tag: Joi.string()
       .valid(...TAGS)
-      .default('Todo')
       .messages({
         'any.only':
           'Tag must be one of: Work, Personal, Meeting, Shopping, Ideas, Travel, Finance, Health, Important, Todo,',
@@ -43,12 +42,12 @@ export const noteIdSchema = {
 export const updateNoteSchema = {
   ...noteIdSchema,
   [Segments.BODY]: Joi.object({
-    title: Joi.string().min(3).max(30).messages({
+    title: Joi.string().min(1).max(30).messages({
       'string.base': 'Title must be a string',
       'string.min': 'Title should have at least {#limit} characters',
       'string.max': 'Title should have at most {#limit} characters',
     }),
-    content: Joi.string().max(50).messages({
+    content: Joi.string().allow('').messages({
       'string.base': 'Content must be a string',
       'string.min': 'Content must be at least {#limit}',
       'string.max': 'Content must be at most {#limit}',
