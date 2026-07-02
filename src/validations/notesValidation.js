@@ -17,6 +17,7 @@ export const createNoteSchema = {
       'string.max': 'Content must be at most {#limit}',
     }),
     tag: Joi.string()
+      .optional()
       .valid(...TAGS)
       .messages({
         'any.only':
@@ -53,6 +54,7 @@ export const updateNoteSchema = {
       'string.max': 'Content must be at most {#limit}',
     }),
     tag: Joi.string()
+      .optional()
       .valid(...TAGS)
       .messages({
         'any.only':
