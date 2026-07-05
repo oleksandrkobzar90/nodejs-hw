@@ -29,7 +29,7 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
-  if (!User) {
+  if (!user) {
     throw createHttpError(401, 'Invalid credentials');
   }
 
@@ -62,7 +62,7 @@ export const logoutUser = async (req, res) => {
 };
 
 export const refreshUserSession = async (req, res) => {
-  const { sessionId, refreshToken } = req.body;
+  const { sessionId, refreshToken } = req.cookies;
 
   if (!sessionId || !refreshToken) {
     throw createHttpError(401, 'Missing session credentials');
