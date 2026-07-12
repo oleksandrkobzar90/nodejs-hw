@@ -10,6 +10,7 @@ import notesRoutes from './routes/notesRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import { errors } from 'celebrate';
 import cookieParser from 'cookie-parser';
+import userRoutes from './routes/userRoutes.js';
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(cookieParser()); // 4. Парсер кукі
 // Група маршрутів
 app.use(authRoutes);
 app.use(notesRoutes);
+app.use(userRoutes);
 
 // Маршрут для імітації middleware помилки
 app.get('/test-error', (req, res) => {
